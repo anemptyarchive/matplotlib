@@ -10,11 +10,13 @@ import numpy as np
 
 # %%
 
+### 乱数の生成
+
 # 試行回数を指定
-max_iter = 300
+max_iter = 360*2-1
 
 # サンプルサイズを指定
-sample_size = 5
+sample_size = 100
 
 # 乱数を生成
 random_t_arr = np.random.uniform(low=0, high=2*np.pi, size=(sample_size, max_iter)) # ラジアン
@@ -43,14 +45,12 @@ margin_rate = 0.1
 axis_size = np.max([np.abs(x_arr), np.abs(y_arr), np.abs(z_arr)])
 axis_size  = np.ceil(axis_size * (1+margin_rate)) # 余白を追加
 
-# 矢サイズを指定
-alr = 0.5
-
 # 配色の共通化用のカラーマップを作成
 cmap = plt.get_cmap("tab10")
+color_num = 10 # カラーマップごとに固定
 
 # 3Dランダムウォークを作図
-fig, ax = plt.subplots(figsize=(10, 10), dpi=250, facecolor='white', 
+fig, ax = plt.subplots(figsize=(12, 12), facecolor='white', 
                        subplot_kw={'projection': '3d'})
 for s in range(sample_size):
     
@@ -60,24 +60,25 @@ for s in range(sample_size):
     z = z_arr[s, max_iter]
 
     ax.plot(x_arr[s], y_arr[s], zs=-axis_size, zdir='z', 
-            color=cmap(s), alpha=0.4, linewidth=1, linestyle='dashed') # xy面の軌跡
+            color=cmap(s%color_num), alpha=0.4, linewidth=1, linestyle='dashed') # xy面の軌跡
     ax.plot(y_arr[s], z_arr[s], zs=-axis_size, zdir='x', 
-            color=cmap(s), alpha=0.4, linewidth=1, linestyle='dashed') # yz面の軌跡
+            color=cmap(s%color_num), alpha=0.4, linewidth=1, linestyle='dashed') # yz面の軌跡
     ax.plot(x_arr[s], z_arr[s], zs=axis_size, zdir='y', 
-            color=cmap(s), alpha=0.4, linewidth=1, linestyle='dashed') # xz面の軌跡
+            color=cmap(s%color_num), alpha=0.4, linewidth=1, linestyle='dashed') # xz面の軌跡
     ax.scatter([x, -axis_size, x], 
                [y, y, axis_size], 
                [-axis_size, z, z], 
-               s=50, fc='none', ec=cmap(s)) # 面ごとの最終地点
+               s=100, fc='none', ec=cmap(s%color_num)) # 面ごとの最終地点
     ax.quiver(x, y, z, 
               [0, -axis_size-x, 0], [0, 0, axis_size-y], [-axis_size-z, 0, 0], 
-              arrow_length_ratio=0, color=cmap(s), linewidth=1, linestyle='dotted') # 点の目盛線
+              arrow_length_ratio=0, color=cmap(s%color_num), linewidth=1, linestyle='dotted') # 点の目盛線
     ax.plot(x_arr[s], y_arr[s], z_arr[s], 
-            color=cmap(s), alpha=0.5) # 軌跡
-    ax.scatter(x, y, z, s=50, color=cmap(s)) # 最終地点
-ax.set_xlim(xmin=-axis_size, xmax=axis_size)
-ax.set_ylim(ymin=-axis_size, ymax=axis_size)
-ax.set_zlim(zmin=-axis_size, zmax=axis_size)
+            color=cmap(s%color_num), alpha=0.4) # 軌跡
+    ax.scatter(x, y, z, s=100, color=cmap(s%color_num)) # 最終地点
+ax.margins(x=0.0, y=0.0, z=0.0) # (機能しない?のでlimで謎小細工)
+ax.set_xlim(xmin=-axis_size/1.05, xmax=axis_size/1.05)
+ax.set_ylim(ymin=-axis_size/1.05, ymax=axis_size/1.05)
+ax.set_zlim(zmin=-axis_size/1.05, zmax=axis_size/1.05)
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 ax.set_zlabel('z')
@@ -100,7 +101,7 @@ axis_size = np.max([np.abs(x_arr), np.abs(y_arr), np.abs(z_arr)])
 axis_size  = np.ceil(axis_size * (1+margin_rate)) # 余白を追加
 
 # グラフオブジェクトを初期化
-fig, ax = plt.subplots(figsize=(10, 10), facecolor='white', 
+fig, ax = plt.subplots(figsize=(12, 12), facecolor='white', 
                        subplot_kw={'projection': '3d'})
 fig.suptitle('Random Walk', fontsize=20)
 
@@ -109,6 +110,7 @@ alr = 1
 
 # 配色の共通化用のカラーマップを作成
 cmap = plt.get_cmap("tab10")
+color_num = 10 # カラーマップごとに固定
 
 # 作図処理を定義
 def update(i):
@@ -123,26 +125,27 @@ def update(i):
         x = x_arr[s, i]
         y = y_arr[s, i]
         z = z_arr[s, i]
-
+        
         ax.plot(x_arr[s, :i+1], y_arr[s, :i+1], zs=-axis_size, zdir='z', 
-                color=cmap(s), alpha=0.4, linewidth=1, linestyle='dashed') # xy面の軌跡
+                color=cmap(s%color_num), alpha=0.4, linewidth=1, linestyle='dashed') # xy面の軌跡
         ax.plot(y_arr[s, :i+1], z_arr[s, :i+1], zs=-axis_size, zdir='x', 
-                color=cmap(s), alpha=0.4, linewidth=1, linestyle='dashed') # yz面の軌跡
+                color=cmap(s%color_num), alpha=0.4, linewidth=1, linestyle='dashed') # yz面の軌跡
         ax.plot(x_arr[s, :i+1], z_arr[s, :i+1], zs=axis_size, zdir='y', 
-                color=cmap(s), alpha=0.4, linewidth=1, linestyle='dashed') # xz面の軌跡
+                color=cmap(s%color_num), alpha=0.4, linewidth=1, linestyle='dashed') # xz面の軌跡
         ax.scatter([x, -axis_size, x], 
                    [y, y, axis_size], 
                    [-axis_size, z, z], 
-                   s=50, fc='none', ec=cmap(s)) # 面ごとの現在地点
+                   s=100, fc='none', ec=cmap(s%color_num)) # 面ごとの現在地点
         ax.quiver(x, y, z, 
                   [0, -axis_size-x, 0], [0, 0, axis_size-y], [-axis_size-z, 0, 0], 
-                  arrow_length_ratio=0, color=cmap(s), linewidth=1, linestyle='dotted') # 点の目盛線
+                  arrow_length_ratio=0, color=cmap(s%color_num), linewidth=1, linestyle='dotted') # 点の目盛線
         ax.plot(x_arr[s, :i+1], y_arr[s, :i+1], z_arr[s, :i+1], 
-                color=cmap(s), alpha=0.5) # 軌跡
-        ax.scatter(x, y, z, s=50, color=cmap(s)) # 現在地点
-    ax.set_xlim(xmin=-axis_size, xmax=axis_size)
-    ax.set_ylim(ymin=-axis_size, ymax=axis_size)
-    ax.set_zlim(zmin=-axis_size, zmax=axis_size)
+                color=cmap(s%color_num), alpha=0.4) # 軌跡
+        ax.scatter(x, y, z, s=100, color=cmap(s%color_num)) # 現在地点
+    ax.margins(x=0.0, y=0.0, z=0.0) # (機能しない?のでlimで謎小細工)
+    ax.set_xlim(xmin=-axis_size/1.05, xmax=axis_size/1.05)
+    ax.set_ylim(ymin=-axis_size/1.05, ymax=axis_size/1.05)
+    ax.set_zlim(zmin=-axis_size/1.05, zmax=axis_size/1.05)
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')

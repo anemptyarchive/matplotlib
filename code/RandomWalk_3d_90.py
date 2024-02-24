@@ -45,9 +45,6 @@ margin_rate = 0.1
 axis_size = np.max([np.abs(x_arr), np.abs(y_arr), np.abs(z_arr)])
 axis_size  = np.ceil(axis_size * (1+margin_rate)) # 余白を追加
 
-# 矢サイズを指定
-alr = 0.5
-
 # 配色の共通化用のカラーマップを作成
 cmap = plt.get_cmap("tab10")
 color_num = 10 # カラーマップごとに固定
@@ -76,7 +73,7 @@ for s in range(sample_size):
               [0, -axis_size-x, 0], [0, 0, axis_size-y], [-axis_size-z, 0, 0], 
               arrow_length_ratio=0, color=cmap(s%color_num), linewidth=1, linestyle='dotted') # 点の目盛線
     ax.plot(x_arr[s], y_arr[s], z_arr[s], 
-            color=cmap(s%color_num), alpha=0.5) # 軌跡
+            color=cmap(s%color_num), alpha=0.4) # 軌跡
     ax.scatter(x, y, z, s=100, color=cmap(s%color_num)) # 最終地点
 ax.margins(x=0.0, y=0.0, z=0.0) # (機能しない?のでlimで謎小細工)
 ax.set_xlim(xmin=-axis_size/1.05, xmax=axis_size/1.05)
@@ -142,7 +139,7 @@ def update(i):
                   [0, -axis_size-x, 0], [0, 0, axis_size-y], [-axis_size-z, 0, 0], 
                   arrow_length_ratio=0, color=cmap(s%color_num), linewidth=1, linestyle='dotted') # 点の目盛線
         ax.plot(x_arr[s, :i+1], y_arr[s, :i+1], z_arr[s, :i+1], 
-                color=cmap(s%color_num), alpha=0.5) # 軌跡
+                color=cmap(s%color_num), alpha=0.4) # 軌跡
         ax.scatter(x, y, z, s=100, color=cmap(s%color_num)) # 現在地点
     ax.margins(x=0.0, y=0.0, z=0.0) # (機能しない?のでlimで謎小細工)
     ax.set_xlim(xmin=-axis_size/1.05, xmax=axis_size/1.05)
